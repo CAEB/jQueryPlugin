@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>图片预加载</title>
+    <style>
+        html{
+            width: 100%;
+            height:100%;
+        }
+        .box{
+            text-align: center;
+        }
+        .btn{
+            display: inline-block;
+            width:50px;
+            height: 30px;
+            line-height: 30px;
+            text-decoration: none;
+            color: #333;
+            margin:8px 15px;
+        }
+        .btn:hover{
+            color: red;
+        }
+        .progress{
+            position: fixed;
+            top:0;
+            left:0;
+            width: 100%;
+            height:100%;
+            background: #fff;
+            text-align: center;
+        }
+        #progress{
+            margin-top:300px;
+        }
+    </style>
+    <script type="text/javascript" src="js/jquery-1.11.1.js"></script>
+    <script type="text/javascript" src="js/preLoad.js"></script>
+</head>
+<body>
+    <div class="progress">
+        <p id="progress">0%</p>
+    </div>
+    <div class="box">
+        <img src="https://img1.360buyimg.com/da/jfs/t5791/91/4285591391/97852/1fa14c44/594a247bN8a1337bb.jpg" alt="pic" id="img" width=800 >
+        <p>
+            <a href="javascript:;" class="btn" data-control="pre">上一张</a>
+            <a href="javascript:;" class="btn" data-control="next">下一张</a>
+        </p>
+    </div>
+</body>
+<script type="text/javascript">
+    let arr=[
+        'https://img1.360buyimg.com/da/jfs/t5791/91/4285591391/97852/1fa14c44/594a247bN8a1337bb.jpg',
+        'https://img20.360buyimg.com/da/jfs/t6172/292/1606208811/87053/40847b4b/59546945Nf3e5c10c.jpg',
+        'https://img11.360buyimg.com/da/jfs/t6376/2/1542104360/68377/107bbfbb/59531b65N1d1054dc.jpg',
+        'https://img20.360buyimg.com/da/jfs/t4249/102/1331521120/224199/40dcb547/58c0b221N5acfd3c6.jpg',
+        'https://img10.360buyimg.com/da/jfs/t6634/81/1394274908/148538/5b7a517d/5950b7daN777c5b84.jpg',
+        'https://img1.360buyimg.com/da/jfs/t5830/88/3949596560/59553/cdda4b32/5944d9c7Nad98df97.jpg'
+    ];
+    let index=0,
+        len=arr.length,
+        $progress=$('#progress');
+        $.preload(arr,{
+            each:function (count) {
+                $progress.html(Math.round((count+1)/len*100)+'%');
+            },
+            all:function () {
+                $('.progress').hide();
+            }
+        });
+    $('.btn').on('click',function () {
+        index=$(this).data('control')==='pre'?Math.max(0,--index):Math.min(len-1,++index);
+        document.title=`${index+1}/${len}`;
+        $('#img').attr('src',arr[index]);
+    });
+</script>
+</html>
